@@ -13,6 +13,12 @@ public class JavaExercises {
      */
     public static void starTriangle() {
         // TODO: Fill in this function
+        for(int i=1;i<=5;i++){
+            for(int j=i;j>0;j--){
+                System.out.println('*');
+            }
+            System.out.println('\n');
+        }
     }
 
     /**
@@ -21,6 +27,13 @@ public class JavaExercises {
      */
     public static void printIndexed(String s) {
         // TODO: Fill in this function
+        int cou=0,len=s.length();
+        char[] result=new char[s.length()*2];
+        for(int i=len-1;i>=0;i--){
+            result[cou++] = s.charAt(len-1-i);
+            result[cou++] = (char)('0'+i);
+        }
+        System.out.println(new String(result));
     }
 
     /**
@@ -29,7 +42,13 @@ public class JavaExercises {
      */
     public static String stutter(String s) {
         // TODO: Fill in this function
-        return null;
+        int len=s.length(),cou=0;
+        char[] result=new char[len*2];
+        for(int i=0;i<len;i++){
+            result[cou++]=s.charAt(i);
+            result[cou++]=s.charAt(i);
+        }
+        return new String(result);
     }
 
     /**
@@ -43,6 +62,10 @@ public class JavaExercises {
      */
     public static int quadrant(int x, int y) {
         // TODO: Fill in this function
+        if(x>0 && y>0) return 1;
+        else if(x<0 && y>0) return 2;
+        else if (x<0 && y<0) return 3;
+        else if(x>0 && y<0) return 4;
         return 0;
     }
 
