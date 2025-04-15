@@ -2,6 +2,7 @@ package adventure;
 
 import edu.princeton.cs.algs4.In;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class AdventureGame {
