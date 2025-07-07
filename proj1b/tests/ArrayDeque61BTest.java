@@ -1,5 +1,6 @@
 import deque.ArrayDeque61B;
 
+import deque.Deque61B;
 import jh61b.utils.Reflection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,5 +22,50 @@ public class ArrayDeque61BTest {
 //
 //         assertWithMessage("Found fields that are not array or primitives").that(badFields).isEmpty();
 //     }
+    @Test
+    /** a test for resize method. */
+    public void resizeTest(){
+        Deque61B<Integer> arr=new ArrayDeque61B<>();
+
+        arr.addFirst(2);
+        arr.addLast(3);
+        arr.addLast(4);
+        arr.addFirst(4);
+        arr.addFirst(2);
+        arr.addLast(3);
+        arr.addLast(4);
+        arr.addFirst(4);
+
+        assertThat(arr.size()).isEqualTo(8);
+
+        arr.addLast(1);
+        assertThat(arr.size()).isEqualTo(9);
+    }
+
+    @Test
+    /** a test for get method. */
+    public void getTest(){
+        Deque61B<Integer> arr=new ArrayDeque61B<>();
+
+        arr.addFirst(2);
+        arr.addLast(3);
+        arr.addLast(4);
+
+        assertThat(arr.get(-1)).isNull();
+        assertThat(arr.get(2341)).isNull();
+        assertThat(arr.get(1)).isEqualTo(3);
+    }
+
+    @Test
+    /** a test for isEmptyAndsize method. */
+    public void isEmptyAndsizeTest(){
+        Deque61B<Integer> arr=new ArrayDeque61B<>();
+        assertThat(arr.isEmpty()).isTrue();
+
+        arr.addFirst(2);
+        arr.addLast(3);
+        arr.addLast(4);
+        assertThat(arr.size()).isEqualTo(3);
+    }
 
 }
