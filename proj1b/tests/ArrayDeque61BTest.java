@@ -25,7 +25,7 @@ public class ArrayDeque61BTest {
     @Test
     /** a test for resize method. */
     public void resizeTest(){
-        Deque61B<Integer> arr=new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> arr=new ArrayDeque61B<>();
 
         arr.addFirst(2);
         arr.addLast(3);
@@ -40,6 +40,33 @@ public class ArrayDeque61BTest {
 
         arr.addLast(1);
         assertThat(arr.size()).isEqualTo(9);
+        assertThat(arr.alength()).isEqualTo(16);
+
+        arr.addFirst(2);
+        arr.addLast(3);
+        arr.addLast(4);
+        arr.addFirst(4);
+        arr.addFirst(2);
+        arr.addLast(3);
+        arr.addLast(4);
+        arr.addFirst(4);
+
+        assertThat(arr.size()).isEqualTo(17);
+        assertThat(arr.alength()).isEqualTo(32);
+
+        arr.removeFirst();
+        arr.removeLast();
+        arr.removeLast();
+        arr.removeFirst();
+        arr.removeLast();
+        arr.removeLast();
+        arr.removeLast();
+        arr.removeFirst();
+        arr.removeLast();
+        arr.removeLast();
+
+        assertThat(arr.size()).isEqualTo(7);
+        assertThat(arr.alength()).isEqualTo(16);
     }
 
     @Test
@@ -66,6 +93,33 @@ public class ArrayDeque61BTest {
         arr.addLast(3);
         arr.addLast(4);
         assertThat(arr.size()).isEqualTo(3);
+    }
+
+    @Test
+    /** a test for toString method. */
+    public void toStringTest(){
+        Deque61B<Integer> arr=new ArrayDeque61B<>();
+
+        arr.addFirst(2);
+        arr.addLast(3);
+        arr.addLast(4);
+
+        assertThat(arr.toList()).containsExactly(2,3,4).inOrder();
+    }
+
+    @Test
+    /** a test for rmFirstAndLast method. */
+    public void rmFirstAndLastTest(){
+        Deque61B<Integer> arr=new ArrayDeque61B<>();
+
+        assertThat(arr.toList()).isNull();
+
+        arr.addFirst(2);
+        arr.addLast(3);
+        arr.addLast(4);
+
+        assertThat(arr.removeFirst()).isEqualTo(2);
+        assertThat(arr.removeLast()).isEqualTo(4);
     }
 
 }

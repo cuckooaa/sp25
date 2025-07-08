@@ -1,5 +1,6 @@
 package deque;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayDeque61B<T> implements Deque61B<T> {
@@ -15,22 +16,33 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         size=0;
     }
 
-    public T[] resize(T[] a){
-        T[] temp=(T[]) new Object[size*2];
+    public int alength(){
+        return a.length;
+    }
+
+    public T[] resizeup(T[] a){
+        return helper(a,size*2);
+    }
+
+    public T[] resizedown(T[] a){
+        return helper(a,a.length/2);
+    }
+
+    public T[] helper(T[] a,int x){
+        T[] temp=(T[]) new Object[x];
         int f=0,l=1;
-        while(nextfirst!=nextlast){
+        for(int i=size;i>0;i--){
             temp[l++]=a[Math.floorMod(++nextfirst,size)];
         }
-        a=temp;
         nextfirst=f;
         nextlast=l;
-        return a;
+        return temp;
     }
 
     @Override
     public void addFirst(T x) {
         if(size==a.length){
-            resize(a);
+            a=resizeup(a);
         }
         a[nextfirst]=x;
         nextfirst=Math.floorMod(nextfirst-1,a.length);
@@ -40,7 +52,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     @Override
     public void addLast(T x) {
         if(size==a.length){
-            resize(a);
+            a=resizeup(a);
         }
         a[nextlast]=x;
         nextlast=Math.floorMod(nextlast+1,a.length);
@@ -49,12 +61,20 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     @Override
     public List<T> toList() {
-        return List.of();
+        if(size==0){
+            return null;
+        }
+        List<T> returnList = new ArrayList<>();
+        int f=nextfirst;
+        while(Math.floorMod(++f,a.length)!=nextlast){
+            returnList.add(a[Math.floorMod(f,a.length)]);
+        }
+        return returnList;
     }
 
     @Override
     public boolean isEmpty() {
-        if(Math.floorMod(nextfirst+1,a.length)==nextlast){
+        if(size==0){
             return true;
         }
         return false;
@@ -67,12 +87,30 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     @Override
     public T removeFirst() {
-        return null;
+        if(isEmpty()){
+            return null;
+        }
+        if(a.length>=16 && size*4<=a.length){
+            a=resizedown(a);
+        }
+        nextfirst=Math.floorMod(nextfirst+1,a.length);
+        T temp=a[nextfirst];
+        size--;
+        return temp;
     }
 
     @Override
     public T removeLast() {
-        return null;
+        if(isEmpty()){
+            return null;
+        }
+        if(a.length>=16 && size*4<=a.length){
+            a=resizedown(a);
+        }
+        nextlast=Math.floorMod(nextlast-1,a.length);
+        T temp=a[nextlast];
+        size--;
+        return temp;
     }
 
     @Override
@@ -85,6 +123,6 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     @Override
     public T getRecursive(int index) {
-        return null;
+        throw new UnsupportedOperationException("No need to implement getRecursive for proj 1b");
     }
 }
