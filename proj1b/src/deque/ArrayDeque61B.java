@@ -1,6 +1,7 @@
 package deque;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ArrayDeque61B<T> implements Deque61B<T> {
@@ -14,6 +15,62 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         nextfirst=0;
         nextlast=1;
         size=0;
+    }
+
+    @Override
+    public String toString(){
+        if(isEmpty()) {return "[]";}
+        Iterator<T> iterator = this.iterator();
+        String result="[";
+        if(iterator.hasNext()){
+            result+=iterator.next();
+        }
+        while(iterator.hasNext()){
+            result+=","+iterator.next();
+        }
+        return result+="]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this==o){return true;}
+        if(o instanceof Deque61B<?>){
+            if (this.size != ((Deque61B<?>) o).size()){ return false; }
+            Iterator<?> itero= ((Deque61B<?>) o).iterator();
+            for (T x : this) {
+                if (x!=itero.next()) {return false;}
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public Iterator<T> iterator() {
+        return new adIterator();
+    }
+
+    private class adIterator implements Iterator<T>{
+        private int p;
+
+        public adIterator(){
+            p=nextfirst;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if(size==0) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public T next() {
+            p=Math.floorMod(++p,a.length);
+            return a[p];
+        }
     }
 
     public int alength(){
@@ -126,3 +183,5 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         throw new UnsupportedOperationException("No need to implement getRecursive for proj 1b");
     }
 }
+
+
