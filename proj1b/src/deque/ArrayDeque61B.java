@@ -53,6 +53,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     private class adIterator implements Iterator<T>{
         private int p;
+        private int num=size;
 
         public adIterator(){
             p=nextfirst;
@@ -60,7 +61,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
         @Override
         public boolean hasNext() {
-            if(size==0) {
+            if(num==0) {
                 return false;
             }
             return true;
@@ -68,6 +69,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
         @Override
         public T next() {
+            num--;
             p=Math.floorMod(++p,a.length);
             return a[p];
         }

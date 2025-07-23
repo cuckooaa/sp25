@@ -50,7 +50,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
 
         @Override
         public boolean hasNext() {
-            if(size==0){
+            if(sentinel.next==sentinel && sentinel.pre==sentinel){
                 return false;
             }
             return true;
