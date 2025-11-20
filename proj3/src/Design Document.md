@@ -1,6 +1,6 @@
 ## Project 3: Design Document
 ### Data Structures
-arrayList<room> roomList; the room is a class that contains constants x and y which refer to a position inside the room. After all the rooms have been generated, the "room" in the list 
+"arrayList<room> roomList"; the room is a class that contains constants x and y which refer to a position inside the room. After all the rooms have been generated, the "room" in the list 
 links each other through the hallway in order.               
 
 Data structures you are planning to use and why. Include any potential helper classes here. If you think something will require code repetition, state how you will mitigate it.
