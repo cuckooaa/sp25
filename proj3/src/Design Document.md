@@ -1,8 +1,17 @@
 ## Project 3: Design Document
 ### Data Structures
-arrayList`<room>` roomList; the room is a class that contains constants x and y which refer to a position inside the room. After all the rooms have been generated, the "room" in the list 
-links each other through the hallway in order.               
+arrayList`<xyInRoom>` roomList; the room is a class that contains constants x and y which refer to a position inside the room. After all the rooms have been generated, the "room" in the list links each other through the hallway in order.               
+```java
+    class xyInRoom{
+        int x;
+        int y;
 
+        public xyInRoom(int x,int y){
+            this.x=x;
+            this.y=y;
+        }
+    }
+```
 Data structures you are planning to use and why. Include any potential helper classes here. If you think something will require code repetition, state how you will mitigate it.
 For example, if this were for Project 1B:
 I will use a 1D backing array to contain the items in my deque.
