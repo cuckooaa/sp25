@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class Main {
     private static final int WIDTH = 30;
-    private static final int HEIGHT = 40;
+    private static final int HEIGHT = 35;
 
     private static TETile[][] world = new TETile[WIDTH][HEIGHT];
     private static TERenderer ter = new TERenderer();
@@ -51,9 +51,9 @@ public class Main {
 
             renderMain();
             StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
-            StdDraw.text(14, 24, "(n) New Game");
-            StdDraw.text(14, 21, "(l) Load Game");
-            StdDraw.text(14, 18, "(q) Quit Game");
+            StdDraw.text(14, 19, "(n) New Game");
+            StdDraw.text(14, 16, "(l) Load Game");
+            StdDraw.text(14, 13, "(q) Quit Game");
             StdDraw.show();
             StdDraw.pause(20);
         }
@@ -63,14 +63,14 @@ public class Main {
         ter.renderFrame(world);
         StdDraw.setPenColor(Color.white);
         StdDraw.setFont(new Font("Times New Roman", Font.BOLD, 36));
-        StdDraw.text(14, 34, "build your own world");
+        StdDraw.text(14, 29, "build your own world");
     }
 
     private static void newGame(){
         StdDraw.clear();
         renderMain();
         StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
-        StdDraw.text(14, 21, "Enter Seed Followed By s");
+        StdDraw.text(14, 19, "Enter Seed Followed By s");
         StdDraw.show();
 
         char c;
@@ -89,9 +89,9 @@ public class Main {
             }
             renderMain();
             StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
-            StdDraw.text(14, 21, "Enter Seed Followed By s");
+            StdDraw.text(14, 19, "Enter Seed Followed By s");
             StdDraw.setPenColor(Color.YELLOW);
-            StdDraw.text(14, 8, s);
+            StdDraw.text(14, 3, s);
             StdDraw.show();
             StdDraw.pause(20);
         }

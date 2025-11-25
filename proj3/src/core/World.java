@@ -8,7 +8,9 @@ import tileengine.Tileset;
 import edu.princeton.cs.algs4.StdDraw;
 import utils.RandomUtils.*;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import static utils.RandomUtils.uniform;
 
@@ -179,6 +181,20 @@ public class World {
 
         char c;
         while(true){
+            double mouseX = StdDraw.mouseX();
+            double mouseY = StdDraw.mouseY();
+            int tileX = (int) mouseX;
+            int tileY = (int) mouseY;
+
+            String hudText = "";
+
+            if (tileX >= 0 && tileX < WIDTH && tileY >= 0 && tileY < HEIGHT) {
+                TETile tile = world[tileX][tileY];
+                hudText = tile.description();
+            } else {
+                hudText = "Space";
+            }
+
             while (StdDraw.hasNextKeyTyped()){
                 c=StdDraw.nextKeyTyped();
                 c = Character.toLowerCase(c);
@@ -201,6 +217,12 @@ public class World {
                 }
             }
             ter.renderFrame(world);
+            StdDraw.setPenColor(Color.GREEN);
+            StdDraw.setFont(new Font("Arial", Font.PLAIN, 16));
+            StdDraw.text(5, HEIGHT - 1, "This is "+hudText);
+            StdDraw.show();
+            StdDraw.pause(20);
         }
+
     }
 }
