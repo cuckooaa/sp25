@@ -17,14 +17,14 @@ public class World {
     // build your own world!
     private static final int WIDTH = 70;
     private static final int HEIGHT = 40;
-    private static final int SEED=20040330;
-    private static final int numOfRoom=12;
-    private static final int maxSizeOfRoom=10;
+    private static int SEED=20040330;
+    private static int numOfRoom=12;
+    private static int maxSizeOfRoom=10;
 
     // Create grid of tiles (all null to begin with).
     TETile[][] world = new TETile[WIDTH][HEIGHT];
     TERenderer ter = new TERenderer();
-    Random random=new Random(SEED);
+    Random random;
     List<xyInRoom> roomList=new ArrayList<>();
     HashMap<Integer,Integer> map=new HashMap<>();
 
@@ -39,8 +39,11 @@ public class World {
     }
 
     //constructor
-    public World() {
+    public World(int seed) {
         ter.initialize(WIDTH,HEIGHT);
+
+        SEED=seed;
+        random=new Random(SEED);
 
         // Fill grid with NOTHING tiles.
         for (int x = 0; x < WIDTH; x++) {
