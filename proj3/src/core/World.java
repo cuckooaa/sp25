@@ -17,9 +17,9 @@ public class World {
     // build your own world!
     private static final int WIDTH = 70;
     private static final int HEIGHT = 40;
-    private static final int SEED=20050512;
+    private static final int SEED=20040330;
     private static final int numOfRoom=12;
-    private static final int maxSizeOfRoom=8;
+    private static final int maxSizeOfRoom=10;
 
     // Create grid of tiles (all null to begin with).
     TETile[][] world = new TETile[WIDTH][HEIGHT];
@@ -51,23 +51,17 @@ public class World {
         for(int i=0;i<numOfRoom;i++) {
             drawRoom();
         }
-//        formRooms();
         formHallWays();
         formWalls();
 
         ter.renderFrame(world);
     }
 
-    //initialize and generate the world
-    public void generateWorld(){
-
-    }
-
     private void formWalls(){
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
                 if((x==0 || x==WIDTH-1 || y==0 || y==HEIGHT-1)
-                        && world[x][y] != Tileset.NOTHING){
+                        && world[x][y] == Tileset.FLOOR){
                     world[x][y] = Tileset.WALL;
                 }
             }
@@ -75,16 +69,16 @@ public class World {
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 1; y < HEIGHT; y++) {
                 if(world[x][y-1]!=world[x][y]){
-                    if(world[x][y-1]==Tileset.NOTHING) world[x][y]=Tileset.WALL;
-                    else if(world[x][y]==Tileset.NOTHING) world[x][y-1]=Tileset.WALL;
+                    if(world[x][y-1]==Tileset.FLOOR) world[x][y]=Tileset.WALL;
+                    else if(world[x][y]==Tileset.FLOOR) world[x][y-1]=Tileset.WALL;
                 }
             }
         }
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 1; x < WIDTH; x++) {
                 if(world[x-1][y]!=world[x][y]){
-                    if(world[x-1][y]==Tileset.NOTHING) world[x][y]=Tileset.WALL;
-                    else if(world[x][y]==Tileset.NOTHING) world[x-1][y]=Tileset.WALL;
+                    if(world[x-1][y]==Tileset.FLOOR) world[x][y]=Tileset.WALL;
+                    else if(world[x][y]==Tileset.FLOOR) world[x-1][y]=Tileset.WALL;
                 }
             }
         }
@@ -97,6 +91,7 @@ public class World {
         while (hallWay.hasNext()){
             end=hallWay.next();
             drawHallWay(start,end);
+//            formWalls(); //there's no difference between 'formWalls' here and in 'world' constructor.
             start=end;
         }
     }
@@ -109,14 +104,10 @@ public class World {
         int unitX=sx>ex? -1 : 1;
         int unitY=sy>ey? -1 : 1;
         for(int h=sx;unitX*(ex-h)>=0;h+=unitX){
-            for(int i=0;i<breadth;i++) {
-                world[h][sy+i-1] = Tileset.FLOOR;
-            }
+                world[h][sy] = Tileset.FLOOR;
         }
         for(int v=sy;unitY*(ey-v)>=0;v+=unitY){
-            for(int i=0;i<breadth;i++) {
-                world[ex+i-1][v] = Tileset.FLOOR;
-            }
+                world[ex][v] = Tileset.FLOOR;
         }
     }
 /**
