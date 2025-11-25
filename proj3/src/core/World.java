@@ -26,9 +26,9 @@ public class World {
     TERenderer ter = new TERenderer();
     Random random;
     List<xyInRoom> roomList=new ArrayList<>();
-    HashMap<Integer,Integer> map=new HashMap<>();
+//    HashMap<Integer,Integer> map=new HashMap<>();
 
-    class xyInRoom{
+    private class xyInRoom{
         int x;
         int y;
 
@@ -57,7 +57,8 @@ public class World {
         formHallWays();
         formWalls();
 
-        ter.renderFrame(world);
+//        ter.renderFrame(world);
+        interactivity();
     }
 
     private void formWalls(){
@@ -161,5 +162,45 @@ public class World {
         int x=uniform(random,startX+2,startX+sizeX-2);
         int y=uniform(random,startY+2,startY+sizeY-2);
         roomList.add(new xyInRoom(x,y));
+    }
+
+    private void updateAvatar(xyInRoom avatar, int nx,int ny){
+        if(world[avatar.x+nx][avatar.y+ny]==Tileset.FLOOR){
+            world[avatar.x][avatar.y] = Tileset.FLOOR;
+            avatar.x += nx;
+            avatar.y += ny;
+            world[avatar.x][avatar.y] = Tileset.AVATAR;
+        }
+    }
+
+    private void interactivity(){
+        xyInRoom avatar=new xyInRoom(roomList.getFirst().x,roomList.getFirst().y);
+        updateAvatar(avatar,0,0);
+
+        char c;
+        while(true){
+            while (StdDraw.hasNextKeyTyped()){
+                c=StdDraw.nextKeyTyped();
+                c = Character.toLowerCase(c);
+
+                switch (c) {
+                    case 'w':
+                        updateAvatar(avatar,0,1);
+                        break;
+                    case 's':
+                        updateAvatar(avatar,0,-1);
+                        break;
+                    case 'a':
+                        updateAvatar(avatar,-1,0);
+                        break;
+                    case 'd':
+                        updateAvatar(avatar,1,0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            ter.renderFrame(world);
+        }
     }
 }
