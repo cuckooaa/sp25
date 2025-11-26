@@ -57,6 +57,22 @@ public class World {
         }
     }
 
+    // by gemini 3.0
+    // ================= ADDED CODE START: VARIABLES =================
+    private boolean lineOfSightEnabled = false; // Toggle for LOS
+    private int currentTheme = 0; // 0: Default, 1: Dark, 2: Forest
+    private static final int SIGHT_RADIUS = 6;
+
+    // Define custom themes locally since we can't edit Tileset.java
+    // Theme 1: Dark Dungeon
+    private static final TETile DARK_WALL = new TETile('#', new Color(100, 100, 100), new Color(20, 20, 20), "dark wall", 101);
+    private static final TETile DARK_FLOOR = new TETile('.', new Color(60, 60, 80), new Color(10, 10, 15), "dark floor", 102);
+
+    // Theme 2: Forest
+    private static final TETile FOREST_WALL = new TETile('♣', new Color(34, 139, 34), new Color(0, 50, 0), "tree", 103);
+    private static final TETile FOREST_FLOOR = new TETile('"', new Color(50, 205, 50), new Color(139, 69, 19), "grass", 104);
+    // ================= ADDED CODE END: VARIABLES =================
+
     //constructor
     public World(int seed) {
         ter.initialize(WIDTH,HEIGHT);
@@ -248,14 +264,124 @@ public class World {
                 }
 
                 movement(c);
+
+                // by gemini 3.0
+                // === INSERT THIS CODE ===
+                if (c == 'v') { // Toggle Vision
+                    lineOfSightEnabled = !lineOfSightEnabled;
+                }
+                if (c == 't') { // Toggle Theme
+                    currentTheme = (currentTheme + 1) % 3;
+                }
+                // ========================
+
             }
-            ter.renderFrame(world);
+
+            // ter.renderFrame(world); // Comment out the old render
+
+            // by gemini 3.0
+            // === INSERT THIS CODE ===
+            renderFrameWithEffects();  // Use the new render with LOS and Themes
+            // ========================
+
             StdDraw.setPenColor(Color.GREEN);
             StdDraw.setFont(new Font("Arial", Font.PLAIN, 16));
-            StdDraw.text(5, HEIGHT - 1, "This is "+hudText);
+            StdDraw.text(4, HEIGHT - 2, "This is "+hudText);
+            StdDraw.setPenColor(Color.WHITE);
+            StdDraw.textRight(69, HEIGHT - 1, "V: Toggle Line of Sight on/off.");
+            StdDraw.textRight(69, HEIGHT - 3, "T: Cycle through themes (Default -> Dark -> Forest).");
+            StdDraw.textRight(69, HEIGHT - 5, "W/A/S/D: Move (Existing).");
+            StdDraw.textRight(69, HEIGHT - 7, ":Q: Save and Quit (Existing).");
             StdDraw.show();
             StdDraw.pause(20);
         }
 
     }
+
+
+    // by gemini 3.0
+    // ================= ADDED CODE START: HELPER METHODS =================
+
+    /**
+     * This is the custom render function that handles both Themes and Line of Sight.
+     * It creates a temporary view of the world to send to the renderer.
+     */
+    private void renderFrameWithEffects() {
+        TETile[][] frame = new TETile[WIDTH][HEIGHT];
+
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                boolean visible = true;
+
+                // 1. Handle Line of Sight Logic
+                if (lineOfSightEnabled) {
+                    if (!isTileVisible(x, y)) {
+                        visible = false;
+                    }
+                }
+
+                // 2. Handle Theme and Visibility
+                if (visible) {
+                    frame[x][y] = applyTheme(world[x][y]);
+                } else {
+                    frame[x][y] = Tileset.NOTHING;
+                }
+            }
+        }
+
+        // Render the processed frame instead of the raw world
+        ter.renderFrame(frame);
+    }
+
+    /**
+     * Converts a standard tile to the currently selected theme tile.
+     */
+    private TETile applyTheme(TETile original) {
+        if (currentTheme == 0) return original; // Default
+
+        if (original.description().equals("wall")) { // Assuming standard wall description is "wall"
+            if (currentTheme == 1) return DARK_WALL;
+            if (currentTheme == 2) return FOREST_WALL;
+        } else if (original.description().equals("floor")) { // Assuming standard floor description is "floor"
+            if (currentTheme == 1) return DARK_FLOOR;
+            if (currentTheme == 2) return FOREST_FLOOR;
+        }
+        // If it's the avatar or nothing, keep it as is
+        return original;
+    }
+
+    /**
+     * Checks if a tile at (targetX, targetY) is visible from the avatar.
+     */
+    private boolean isTileVisible(int targetX, int targetY) {
+        int ax = avatar.x;
+        int ay = avatar.y;
+
+        // 1. Check Distance (Circle optimization)
+        double distance = Math.sqrt(Math.pow(targetX - ax, 2) + Math.pow(targetY - ay, 2));
+        if (distance > SIGHT_RADIUS) {
+            return false;
+        }
+
+        // 2. Raycast (Line of Sight)
+        // We walk from avatar to target. If we hit a wall, the target is blocked.
+        // Using simple interpolation
+        double steps = Math.max(Math.abs(targetX - ax), Math.abs(targetY - ay));
+
+        for (double i = 1; i < steps; i++) {
+            double t = i / steps;
+            int currentX = (int) Math.round(ax + t * (targetX - ax));
+            int currentY = (int) Math.round(ay + t * (targetY - ay));
+
+            // If we hit a wall before reaching the target, vision is blocked
+            // Note: We check if it is a WALL.
+            if (world[currentX][currentY].description().equals("wall")) {
+                return false;
+            }
+        }
+        return true;
+    }
+    // ================= ADDED CODE END: HELPER METHODS =================
+
+
 }
