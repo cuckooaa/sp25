@@ -1,5 +1,6 @@
 package core;
 
+import edu.princeton.cs.algs4.Out;
 import org.junit.jupiter.api.MethodOrderer;
 import tileengine.TERenderer;
 import tileengine.TETile;
@@ -24,11 +25,27 @@ public class World {
     private static int maxSizeOfRoom=10;
 
     // Create grid of tiles (all null to begin with).
-    TETile[][] world = new TETile[WIDTH][HEIGHT];
-    TERenderer ter = new TERenderer();
-    Random random;
-    List<xyInRoom> roomList=new ArrayList<>();
-//    HashMap<Integer,Integer> map=new HashMap<>();
+    private TETile[][] world = new TETile[WIDTH][HEIGHT];
+    private TERenderer ter = new TERenderer();
+    private Random random;
+    private List<xyInRoom> roomList=new ArrayList<>();
+    private xyInRoom avatar;
+
+    public void loadAvatar(int x, int y) {
+        avatar.x=x;
+        avatar.y=y;
+    }
+
+    public void startGameLoop() {
+        interactivity();
+    }
+
+    public void avatarSave(){
+        String filename = "save.txt";
+        Out out = new Out(filename);
+        out.println(SEED+","+avatar.x+","+ avatar.y);
+        out.close();
+    }
 
     private class xyInRoom{
         int x;
@@ -59,8 +76,8 @@ public class World {
         formHallWays();
         formWalls();
 
-//        ter.renderFrame(world);
-        interactivity();
+        avatar=new xyInRoom(roomList.getFirst().x,roomList.getFirst().y);
+//        updateAvatar(0,0);
     }
 
     private void formWalls(){
@@ -166,7 +183,7 @@ public class World {
         roomList.add(new xyInRoom(x,y));
     }
 
-    private void updateAvatar(xyInRoom avatar, int nx,int ny){
+    private void updateAvatar(int nx,int ny){
         if(world[avatar.x+nx][avatar.y+ny]==Tileset.FLOOR){
             world[avatar.x][avatar.y] = Tileset.FLOOR;
             avatar.x += nx;
@@ -175,9 +192,28 @@ public class World {
         }
     }
 
+    private void movement(char c){
+        c = Character.toLowerCase(c);
+        switch (c) {
+            case 'w':
+                updateAvatar(0,1);
+                break;
+            case 's':
+                updateAvatar(0,-1);
+                break;
+            case 'a':
+                updateAvatar(-1,0);
+                break;
+            case 'd':
+                updateAvatar(1,0);
+                break;
+            default:
+                break;
+        }
+    }
+
     private void interactivity(){
-        xyInRoom avatar=new xyInRoom(roomList.getFirst().x,roomList.getFirst().y);
-        updateAvatar(avatar,0,0);
+        updateAvatar(0,0);
 
         char c;
         while(true){
@@ -197,24 +233,21 @@ public class World {
 
             while (StdDraw.hasNextKeyTyped()){
                 c=StdDraw.nextKeyTyped();
-                c = Character.toLowerCase(c);
 
-                switch (c) {
-                    case 'w':
-                        updateAvatar(avatar,0,1);
-                        break;
-                    case 's':
-                        updateAvatar(avatar,0,-1);
-                        break;
-                    case 'a':
-                        updateAvatar(avatar,-1,0);
-                        break;
-                    case 'd':
-                        updateAvatar(avatar,1,0);
-                        break;
-                    default:
-                        break;
+                if(c==':'){
+                    outer:
+                    while(true) {
+                        while (StdDraw.hasNextKeyTyped()) {
+                            char c1 = StdDraw.nextKeyTyped();
+                            if (c1 == 'q' || c1 == 'Q') {
+                                avatarSave();
+                                System.exit(0);
+                            }else break outer;
+                        }
+                    }
                 }
+
+                movement(c);
             }
             ter.renderFrame(world);
             StdDraw.setPenColor(Color.GREEN);

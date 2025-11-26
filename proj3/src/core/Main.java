@@ -1,11 +1,13 @@
 package core;
 
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import tileengine.TERenderer;
 import tileengine.TETile;
 import tileengine.Tileset;
 
 import java.awt.*;
+import java.io.File;
 
 public class Main {
     private static final int WIDTH = 30;
@@ -40,7 +42,8 @@ public class Main {
                         newGame();
                         break outerLoop;
                     case 'l':
-                        break;
+                        loadWorld();
+                        break outerLoop;
                     case 'q':
                         System.exit(0);
                         break;
@@ -56,6 +59,23 @@ public class Main {
             StdDraw.text(14, 13, "(q) Quit Game");
             StdDraw.show();
             StdDraw.pause(20);
+        }
+    }
+
+    private static void loadWorld() {
+        String filename = "save.txt";
+        File file = new File(filename);
+
+        In in = new In(file);
+        if (in.hasNextLine()) {
+            String String = in.readLine();
+            String[] stringArray = String.split(",");
+            int seed=Integer.parseInt(stringArray[0]);
+            World randomWorld=new World(seed);
+            randomWorld.loadAvatar(Integer.parseInt(stringArray[1]),Integer.parseInt(stringArray[2]));
+            randomWorld.startGameLoop();
+        } else {
+            System.out.println("nothing been saved");
         }
     }
 
@@ -83,6 +103,7 @@ public class Main {
 
                 if(c=='s' || c=='S'){
                     World randomWorld=new World(Integer.parseInt(s));
+                    randomWorld.startGameLoop();
                     break newGameLoop;
                 }
                 s+=c;
